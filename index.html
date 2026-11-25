@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProfileCard | GitHub stats and skills card for your profile README</title>
+<meta name="description" content="Generate a clean GitHub stats and top-languages card as an SVG for your profile README. 5 themes, no signup, runs in your browser.">
+<meta property="og:title" content="ProfileCard">
+<meta property="og:description" content="Make a GitHub stats card SVG for your profile README. 5 themes, no signup.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232b1055'/%3E%3Cstop offset='1' stop-color='%23ff7a59'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Ccircle cx='50' cy='38' r='14' fill='%23fff'/%3E%3Crect x='24' y='58' width='52' height='18' rx='9' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:#fff;font:16px/1.55 "Segoe UI",Inter,system-ui,sans-serif;background:linear-gradient(160deg,#1a0b3b 0%,#4a1b6b 45%,#d4507a 100%) fixed}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0}.b1{width:420px;height:420px;background:#ff9a5a;right:-120px;top:-100px}.b2{width:380px;height:380px;background:#6a3cff;left:-120px;bottom:-120px}
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:30px 20px 60px}
+.brand{font-weight:800;font-size:20px;letter-spacing:.3px}.brand span{color:#ffc371}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.05;margin:28px 0 10px;font-weight:800;letter-spacing:-1px}
+h1 em{font-style:normal;background:linear-gradient(90deg,#ffc371,#ff5f6d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:600px;color:#f1d9ff;margin:0 0 26px}
+.glass{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:20px;padding:20px}
+.form{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.form input{flex:1;min-width:200px;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.25);color:#fff;font:inherit;padding:12px 14px}
+.form input::placeholder{color:#d9bfe8}
+.btn{border:0;border-radius:12px;padding:12px 20px;font:700 15px inherit;cursor:pointer;background:linear-gradient(90deg,#ffc371,#ff5f6d);color:#2b0f2e}
+.btn.sec{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.themes{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.themes button{border:2px solid transparent;border-radius:99px;padding:6px 14px;cursor:pointer;font:600 13px inherit;color:#fff;background:rgba(255,255,255,.14)}
+.themes button.on{border-color:#ffc371;background:rgba(255,195,113,.25)}
+.out{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
+#prev{min-height:195px;min-width:495px;display:flex;align-items:center;justify-content:center;border-radius:16px;overflow:hidden}
+#prev svg{display:block;max-width:100%;height:auto;filter:drop-shadow(0 12px 28px rgba(0,0,0,.35))}
+.side{display:flex;flex-direction:column;gap:10px}
+.side textarea{width:100%;height:96px;border-radius:12px;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.28);color:#ffe8cf;font:12px/1.5 ui-monospace,Menlo,monospace;padding:10px;resize:vertical}
+.side small{color:#ecd3f7}
+#msg{min-height:22px;color:#ffd0a0;margin-top:10px}
+.how{margin-top:26px}.how h3{margin:0 0 6px}.how ol{margin:0;padding-left:20px;color:#f5e4ff}.how code{background:rgba(0,0,0,.3);padding:1px 6px;border-radius:6px}
+footer{margin-top:26px;font-size:13px;color:#e8c9f5}footer a{color:#ffc371}
+@media(max-width:860px){.out{grid-template-columns:1fr}#prev{min-width:0}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+<div class="brand">Profile<span>Card</span></div>
+<h1>A stats card for your<br><em>GitHub profile</em></h1>
+<p class="lead">Type a username. Get an SVG with your stars, repos, followers and top languages, in a theme you like. Drop it into your profile README.</p>
+<div class="glass">
+<form class="form" id="f"><input id="u" placeholder="GitHub username, e.g. torvalds" autocomplete="off" spellcheck="false"><button class="btn" type="submit">Generate</button></form>
+<div class="themes" id="th"></div>
+<div id="msg"></div>
+<div class="out" id="out" hidden>
+<div id="prev"></div>
+<div class="side"><button class="btn" id="dl">Download SVG</button><button class="btn sec" id="cpy">Copy README snippet</button>
+<textarea id="md" readonly></textarea><small>Save the SVG in your <code>username/username</code> profile repo (for example <code>card.svg</code>), then paste the snippet into its README.</small></div>
+</div></div>
+<div class="glass how"><h3>How it works</h3><ol><li>It reads your public data from the GitHub API, in your browser. Nothing goes to our server, because there is none.</li><li>Stars and languages count your own repos, not forks.</li><li>The API allows 60 requests an hour per IP without a token, which is plenty for this.</li></ol></div>
+<footer>Built by <a href="https://github.com/mostaaafaomran-ctrl">mostaaafaomran-ctrl</a> · <a href="https://github.com/mostaaafaomran-ctrl/profilecard">Source</a></footer>
+</div>
+<script src="core.js"></script>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)},theme='sunset',cur=null,svgText='';
+var P=ProfileCard;
+$('th').innerHTML=Object.keys(P.THEMES).map(function(k){return '<button type="button" data-t="'+k+'" class="'+(k===theme?'on':'')+'">'+k+'</button>'}).join('');
+function draw(){if(!cur)return;svgText=P.svg(cur,theme);$('prev').innerHTML=svgText;$('out').hidden=false;
+ $('md').value='<p align="center">\n  <img src="card.svg" alt="'+cur.login+' GitHub stats" width="495">\n</p>';}
+$('th').onclick=function(e){var b=e.target.closest('button');if(!b)return;theme=b.dataset.t;Array.prototype.forEach.call($('th').children,function(x){x.classList.toggle('on',x===b)});draw()};
+function toData(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(ok){var fr=new FileReader();fr.onload=function(){ok(fr.result)};fr.readAsDataURL(b)})})}
+function go(name){
+  name=name.trim().replace(/^@/,'').replace(/.*github\.com\//,'').split('/')[0];
+  if(!/^[a-z0-9-]{1,39}$/i.test(name)){$('msg').textContent='That does not look like a GitHub username.';return}
+  $('msg').textContent='Loading @'+name+'…';
+  fetch('https://api.github.com/users/'+name).then(function(r){if(r.status===404)throw new Error('No user named '+name+'.');if(r.status===403)throw new Error('GitHub rate limit reached. Try again in a few minutes.');if(!r.ok)throw new Error('GitHub error '+r.status);return r.json()}).then(function(u){
+    return fetch('https://api.github.com/users/'+name+'/repos?per_page=100&sort=pushed').then(function(r){return r.ok?r.json():[]}).then(function(rp){
+      cur=P.stats(u,rp);return toData(u.avatar_url+'&s=104').catch(function(){return null}).then(function(a){cur.avatar=a;$('msg').textContent='';history.replaceState(null,'','?u='+encodeURIComponent(name));draw();});});
+  }).catch(function(e){$('msg').textContent=e.message||'Could not reach GitHub.'});
+}
+$('f').onsubmit=function(e){e.preventDefault();go($('u').value)};
+$('dl').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([svgText],{type:'image/svg+xml'}));a.download='card.svg';a.click()};
+$('cpy').onclick=function(){var b=this;navigator.clipboard.writeText($('md').value).then(function(){b.textContent='Copied ✓'},function(){$('md').select()})};
+var q=new URLSearchParams(location.search).get('u');if(q){$('u').value=q;go(q)}
+})();
+</script>
+</body></html>
